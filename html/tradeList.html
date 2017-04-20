@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no"/>
+    <title>我的订单</title>
+    <link rel="stylesheet" href="../css/main.css"/>
+    <style>
+        body {
+            height: 100%;
+            background: #eee;
+        }
+
+        .orderSection {
+            /*border: 1px solid #000;*/
+            margin-bottom: 1rem;
+            box-sizing: border-box;
+            padding: 1rem 1rem;
+            min-height: 10rem;
+            background: white;
+        }
+
+        #orderScroll {
+            height: 100%;
+            overflow: scroll;
+        }
+    </style>
+</head>
+<body>
+<div id='title'></div>
+<div id='orderScroll' v-el:scrollcontainer v-on:scroll=scroll($event)>
+    <div id='orderContent' v-el:scrollcontent>
+        <template v-for='item in items'>
+            <div class='orderSection' :class='[]' v-bind='{"data-id":item.id}' v-on:click='toPayment($event)'>
+                <div style="margin-bottom: 1rem;">
+                    <span style="float:left;font-size: 1.4rem;font-weight: bold">{{item.product_name}}</span>
+                    <span style="float:right;color: #ccae77;">{{item.payment_status}}</span>
+
+                    <div style="clear: both;"></div>
+                </div>
+
+                <div>
+                    <span>{{item.total_price|currency '￥' 0}}</span>
+                    <span style="margin-left: 1rem;" v-if='item.total_price!=item.total_shop_price'>8.5折</span>
+                    <span style="float: right;">{{item.ctime|toDate}}</span>
+                </div>
+            </div>
+        </template>
+    </div>
+</div>
+
+<script src='../node_modules/vue/dist/vue.min.js'></script>
+<script src='../node_modules/jquery/dist/jquery.min.js'></script>
+<script src='../components/demo.js'></script>
+<script src='../js/controller/controller.js'></script>
+<script src='../js/tool/fastclick.js'></script>
+<script src='../js/tool/response.js'></script>
+
+<script>
+    $(function () {
+        FastClick.attach(document.body);
+
+        var vm = new Vue({
+            el: '#orderScroll',
+            data: {
+                ifNeedAjax: true,
+                isAjaxing: false,
+                items: [],
+            },
+            methods: {
+                //页面跳转...
+                toPayment: function (e) {
+                    var id = (e.currentTarget.getAttribute('data-id'));
+                    location.href = 'tradeDetail.html?id=' + id;
+                },
+
+                //滚动代码
+                scroll: function (e) {
+                    e.preventDefault();
+
+                    if (!this.ifNeedAjax) {
+                        return;
+                    }
+
+                    if (this.isAjaxing) {
+                        return;
+                    }
+
+                    var containerH = this.$els.scrollcontainer.offsetHeight;
+                    var contentH = this.$els.scrollcontent.offsetHeight;
+                    var scrollH = this.$els.scrollcontainer.scrollTop;
+
+                    if (scrollH >= (contentH - containerH )) { //动态高-容器高
+                        this.getList();
+                    }
+                },
+
+                //一个动作action....
+                getList: function () {
+                    var that = this;
+                    that.isAjaxing = true;
+                    controller.direct({
+                        php: '../json/order.json',
+                        params: {},
+                        jsonpCallback: 'jsonpCallback',
+                    }, function (json) {
+//                        console.log(JSON.stringify(json, null, '\t'));
+//                        console.log(json.data);
+                        that.isAjaxing = false;
+                        [].forEach.call(json.data, function (e, i, arr) {
+                            that.items.push(e);
+                        });
+                    })
+                }
+            },
+            filters: {
+                toDate: function (val) {
+                    return new Date(val).toLocaleDateString();
+                }
+            },
+        });
+        vm.getList();
+        window.vm = vm;
+    })
+</script>
+</body>
+</html>

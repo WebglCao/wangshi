@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no"/>
+    <title>个人信息</title>
+    <link rel="stylesheet" href="../css/main.css"/>
+    <style>
+        .section {
+            background: #eee;
+            margin-bottom: 1rem;
+            box-sizing: border-box;
+            padding: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+<div id="demo">
+    <template v-for='item in items'>
+        <div class='section'>
+            <div style="margin-bottom: 1rem">
+                <span style="font-size:1.4rem;float:left;font-weight: bold">{{item.name}}</span>
+                <span style="font-size:1.1rem;float:right;color: #ccae77">{{item.title}}</span>
+
+                <div style="clear:both"></div>
+            </div>
+            <div>{{item.address}}</div>
+        </div>
+    </template>
+</div>
+
+
+<script src='../node_modules/vue/dist/vue.min.js'></script>
+<script src='../node_modules/jquery/dist/jquery.min.js'></script>
+<!--<script src='../components/myScroll.js'></script>-->
+<script src='../js/controller/controller.js'></script>
+<script src='../js/tool/fastclick.js'></script>
+<script src='../js/tool/response.js'></script>
+<script src='../js/searchToJson/searchToJson.js'></script>
+
+<script>
+    $(function () {
+        FastClick.attach(document.body);
+
+        var vm = new Vue({
+            el: '#demo',
+            data: {
+                items: [
+                    {name: '刘加伟', title: '本人', address: '广纪路700号'},
+                    {name: '刘加伟', title: '本人', address: '广纪路700号'},
+                    {name: '刘加伟', title: '本人', address: '广纪路700号'},
+                ]
+            },
+
+        });
+    })
+</script>
+</body>
+</html>

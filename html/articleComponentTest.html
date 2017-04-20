@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no"/>
+    <title>资讯列表</title>
+    <link rel="stylesheet" href="../css/main.css"/>
+    <style>
+
+        body {
+            height: 100%;
+        }
+
+        #app {
+            height: 100%;
+        }
+
+        /* 头部tab */
+        #header {
+            position: fixed;
+            width: 100%;
+            background: white;
+            z-index: 2;
+            overflow-y: scroll;
+            white-space: nowrap;
+        }
+
+        #header .item {
+            width: 25%;
+            display: inline-block;
+            text-align: center;
+            height: 5rem;
+            line-height: 5rem;
+            position: relative;
+        }
+
+        .itemCur {
+            color: #CCB89E;
+        }
+
+        .itemCur::after {
+            content: "";
+            position: absolute;
+            bottom: 0rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4rem;
+            height: 2px;
+            border-radius: 4px;
+            background: #CCB89E;
+        }
+
+        /* 文章瀑布流 */
+        #articleContainer {
+            box-sizing: border-box;
+            padding-top: 5rem;
+            height: 100%;
+            /*overflow: scroll;*/
+        }
+
+        .myScrollContainer {
+            height: 100%;
+            overflow: scroll;
+        }
+
+        .myScrollSection {
+            border: 1px solid #000;
+            margin-bottom: 1rem;
+            box-sizing: border-box;
+            padding: 1rem 1rem;
+            min-height: 10rem;
+            background: white;
+            min-height: 40rem;
+        }
+
+
+    </style>
+</head>
+<body>
+<div id='app'>
+    <div id="header">
+        <template v-for='item in items'>
+            <span class='item' @click='click($index)' v-bind:class="[(index==$index)?'itemCur':'']">{{item.name}}</span>
+        </template>
+    </div>
+
+    <div id='articleContainer'>
+        <myscroll v-for="item in items" v-show='index==$index' :id="item.id"></myscroll>
+    </div>
+</div>
+
+<script src='../node_modules/vue/dist/vue.min.js'></script>
+<script src='../node_modules/jquery/dist/jquery.min.js'></script>
+<script src='../components/myScroll/myScroll.js'></script>
+<script src='../js/controller/controller.js'></script>
+<script src='../js/tool/fastclick.js'></script>
+<script src='../js/tool/response.js'></script>
+
+<script>
+    $(function () {
+
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                items: [],
+                index: 0,
+            },
+            methods: {
+                click: function (i) {
+                    var that = this;
+                    this.index = i;
+                }
+            },
+
+            components: {
+                'myscroll': myScroll,
+            },
+            created: function () {
+                var that = this;
+
+                //拉取文章列表...
+                controller.direct(
+                        {
+                            php: 'index.php?r=article/api-get-channel',
+                            params: {}
+                        }
+                        ,
+                        function (json) {
+                            console.log(JSON.stringify(json, null, '\t'));
+                            that.items = [
+                                {"id": "10", "name": "article10"},
+                                {"id": "11", "name": "article11"},
+                                {"id": "12", "name": "article12"},
+                                {"id": "13", "name": "article13"},
+                            ];
+                        },
+                        function (json) {
+                            console.log(JSON.stringify(json, null, '\t'));
+                            that.items = [
+                                {"id": "10", "name": "article10"},
+                                {"id": "11", "name": "article11"},
+                                {"id": "12", "name": "article12"},
+                                {"id": "13", "name": "article13"},
+                            ];
+
+                        }
+                );
+            },
+
+            //拉一次第一个页面的ajax...
+            ready: function () {
+                var that = this;
+
+                //让第一个组件拉数据
+                setTimeout(function () {
+                    that.$children[0].getList();
+                }, 1000)
+
+            }
+
+        });
+
+
+        window.vm = vm;
+
+
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+jsonpCallback({
+packageId:13,
+involvementProductsNumber: 3,
+totalPrice: '85000',
+productName: '惠宾卡  8.5折',
+products: [
+{
+productName: '世界公民签证7选5',
+involvementArray: ['英国', '美国', '法国', '意大利', '新西兰', '日本', '加拿大'],
+involvementNumber: 7,
+involvementLimit: 5,
+},
+
+{
+productName: '世界公民签证5选3',
+involvementArray: ['英国', '美国', '法国', '意大利', '新西兰',],
+involvementNumber: 5,
+involvementLimit: 3,
+},
+
+{
+productName: '世界公民签证3选1',
+involvementArray: ['英国', '美国', '法国'],
+involvementNumber: 3,
+involvementLimit: 1,
+},
+{
+productName: '永久享受入境卡服务',
+},
+{
+productName: '国际驾照免费办理',
+},
+],
+
+
+}
+)

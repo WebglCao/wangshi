@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no"/>
+    <title>交易记录</title>
+    <link rel="stylesheet" href="../css/main.css"/>
+    <style>
+        body {
+            background: #eee;
+        }
+
+        #demo {
+            box-sizing: border-box;
+            padding: 1rem;
+        }
+
+        #demo img {
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+<div id="demo">
+    <img width="100%" src="../img/proList1.png"/>
+    <img width="100%" src="../img/proList2.png"/>
+    <img width="100%" src="../img/proList3.png"/>
+</div>
+
+<!--<script src='../node_modules/vue/dist/vue.min.js'></script>-->
+<script src='../node_modules/jquery/dist/jquery.min.js'></script>
+<!--<script src='../components/myScroll.js'></script>-->
+<script src='../js/controller/controller.js'></script>
+<script src='../js/tool/fastclick.js'></script>
+<script src='../js/tool/response.js'></script>
+<script src='../js/searchToJson/searchToJson.js'></script>
+
+<script>
+    $(function () {
+        FastClick.attach(document.body);
+
+        //jqObj...
+        $imgs = $('#demo img');
+
+        //bindEvent...
+        $imgs.eq(0).click(function () {
+            console.log(0);
+        })
+    })
+</script>
+</body>
+</html>

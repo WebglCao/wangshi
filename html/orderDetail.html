@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no"/>
+    <title>交易记录</title>
+    <link rel="stylesheet" href="../css/main.css"/>
+    <style>
+
+        #demo {
+            margin: 1rem;
+            box-sizing: border-box;
+            background: #F3F2F0;
+            border-radius: 0.5rem;
+        }
+
+        #userImg {
+            height: 1rem;
+            vertical-align: middle;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+<div id='demo'>
+    <div style="border-bottom: 1px solid #ddd;box-sizing: border-box;padding: 1rem;">
+        <span style="float: left;"><span style="color: #CCB89E;">●</span> {{product_name}}</span>
+        <span style="color:#CCB89E;float: right;"><img id="userImg" src="../img/member.png"/> {{used_by}}</span>
+
+        <div style="clear: both;"></div>
+    </div>
+    <div v-for='item in items' style="box-sizing: border-box;padding: 1rem;margin-left: 1rem;position: relative;">
+        <div style="font-size: 1.3rem;">{{item.status}}</div>
+        <div style="color: #666;">负责管家：{{item.created_by}}</div>
+        <div style="color: #aaaaaa;">{{item.ctime|toDate}}</div>
+        <div class='point' style="position: absolute;left: 0rem;top: 1rem;color: #aaa">●</div>
+    </div>
+</div>
+
+<script src='../node_modules/vue/dist/vue.min.js'></script>
+<script src='../node_modules/jquery/dist/jquery.min.js'></script>
+<script src='../components/demo.js'></script>
+<script src='../js/controller/controller.js'></script>
+<script src='../js/tool/fastclick.js'></script>
+<script src='../js/tool/response.js'></script>
+
+<script>
+    $(function () {
+        FastClick.attach(document.body);
+
+        var vm = new Vue({
+            el: '#demo',
+            data: {
+                ifNeedAjax: true,
+                isAjaxing: false,
+                product_name: '美国最长时间旅游签证办理',
+                used_by: '刘加伟',
+                items: [
+                    {
+                        status: '资料已收集完毕',
+                        ctime: 1490711177,
+                        created_by: 'Amy',
+                    },
+                    {
+                        status: '资料收集中',
+                        ctime: 1490711177,
+                        created_by: 'Bella',
+                    },
+                    {
+                        status: '资料收集中',
+                        ctime: 1490711177,
+                        created_by: 'Bella',
+                    },
+                ],
+            },
+            methods: {},
+            filters: {
+                toDate: function (val) {
+                    return new Date(val).toLocaleDateString();
+                }
+            },
+        });
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no"/>
+    <title>邀请好友</title>
+    <link rel="stylesheet" href="../css/main.css"/>
+    <style>
+        #demo {
+            box-sizing: border-box;
+            padding: 1rem;
+        }
+
+        .section {
+            border: 1px solid #eee;
+            margin-bottom: 1rem;
+            box-sizing: border-box;
+            padding: 0.5rem 1rem;
+        }
+
+        .headerImg {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            display: block;
+            float: left;
+            vertical-align: middle;
+            margin-right: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+<div style="text-align: center;margin: 2rem 0 1rem;font-size: 1.3rem;">邀请记录</div>
+<div id="demo">
+    <template v-for='item in items'>
+        <div class='section'>
+            <span><img class='headerImg' v-bind="{src:item.img}"/></span>
+            <span style="font-size: 1.3rem;line-height: 3rem;">{{item.name}}</span>
+            <span style="color:#ccae77;line-height: 3rem;">/{{item.huiyuan}}</span>
+            <span style="float: right;line-height: 3rem;">返额佣金：{{item.yongjin}}</span>
+
+            <div style="clear: both"></div>
+        </div>
+    </template>
+</div>
+
+<script src='../node_modules/vue/dist/vue.min.js'></script>
+<script src='../node_modules/jquery/dist/jquery.min.js'></script>
+<!--<script src='../components/myScroll.js'></script>-->
+<script src='../js/controller/controller.js'></script>
+<script src='../js/tool/fastclick.js'></script>
+<script src='../js/tool/response.js'></script>
+<script src='../js/searchToJson/searchToJson.js'></script>
+
+<script>
+    $(function () {
+        FastClick.attach(document.body);
+
+        var vm = new Vue({
+            el: '#demo',
+            data: {
+                items: [
+                    {img: '../img/firstArticle.jpg', name: '刘加伟', huiyuan: '白金会员', yongjin: '1299'},
+                    {img: '../img/firstArticle.jpg', name: '刘加伟', huiyuan: '白金会员', yongjin: '1299'},
+                    {img: '../img/firstArticle.jpg', name: '刘加伟', huiyuan: '白金会员', yongjin: '1299'},
+                ]
+            },
+
+        });
+    })
+</script>
+</body>
+</html>

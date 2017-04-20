@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no"/>
+    <title>交易记录</title>
+    <link rel="stylesheet" href="../css/main.css"/>
+    <style>
+        body {
+            height: 100%;
+        }
+
+        .rowL {
+            width: 25%;
+            display: inline-block;
+        }
+
+        .rowR {
+            width: 75%;
+            display: inline-block;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+
+<div id='example'>
+    <div style="border-bottom: 1px solid #eee;box-sizing: border-box;padding: 2rem 1rem;">
+        <span style="float: left;">支付金额</span><span
+            style="float: right;font-size: 2rem;">{{total_price|currency '￥' 0}}</span>
+
+        <div style="clear: both;"></div>
+    </div>
+    <div style="border-bottom: 1px solid #eee;box-sizing: border-box;padding: 1rem;">
+        <div><span class='rowL'>支付方式</span><span class='rowR'>{{pay_method}}</span></div>
+        <div><span class='rowL'>交易单号</span><span class='rowR'>{{serial}}</span></div>
+        <div><span class='rowL'>交易时间</span><span class='rowR'>{{ctime | toDateTime}}</span></div>
+        <div><span class='rowL'>创建人</span><span class='rowR'>{{created_by}}</span></div>
+        <div><span class='rowL'>确认人</span><span class='rowR'>{{confirmed_by}}</span></div>
+    </div>
+</div>
+
+<script src='../node_modules/vue/dist/vue.js'></script>
+<script src='../node_modules/jquery/dist/jquery.min.js'></script>
+<script src='../components/demo.js'></script>
+<script src='../js/controller/controller.js'></script>
+<script src='../js/tool/fastclick.js'></script>
+<script src='../js/tool/response.js'></script>
+
+<script>
+    $(function () {
+        FastClick.attach(document.body);
+
+        var vm = new Vue({
+            el: '#example',
+            data: {
+                total_price: '1500',
+
+                pay_method: '银行转账',
+                serial: '2017032815460021595',
+                ctime: 1490711177,
+                created_by: 'Amy',
+                confirmed_by: 'Bella',
+            },
+            methods: {},
+            filters: {
+                toDate: function (val) {
+                    return new Date(val).toLocaleDateString();
+                },
+                toDateTime: function (val) {
+                    return new Date(val).toLocaleString();
+                }
+            },
+        });
+
+    })
+</script>
+</body>
+</html>

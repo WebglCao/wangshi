@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no"/>
+    <title>我的订单</title>
+    <link rel="stylesheet" href="../css/main.css"/>
+    <style>
+        body {
+            height: 100%;
+        }
+
+        #detailScroll {
+            height: 100%;
+            overflow: scroll;
+        }
+
+        .detailSection {
+            margin: 1rem;
+            box-sizing: border-box;
+            background: #F3F2F0;
+            border-radius: 0.5rem;
+        }
+
+        .row1 {
+            border-bottom: 1px solid #ddd;
+            box-sizing: border-box;
+            padding: 1rem;
+        }
+
+        .row1 img {
+            height: 1rem;
+            vertical-align: middle;
+            display: inline-block;
+        }
+
+        .row2 {
+            border-bottom: 1px solid #ddd;
+            box-sizing: border-box;
+            padding: 1rem;
+        }
+
+        .row3 > span {
+            display: inline-block;
+            text-align: center;
+            width: 50%;
+            box-sizing: border-box;
+            padding: 1rem 0;
+            float: left;
+        }
+
+        .row3 img {
+            width: 2rem;
+            vertical-align: middle;
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+<div id='detailScroll' v-el:scrollcontainer v-on:scroll=scroll($event)>
+    <div id='detailContent' v-el:scrollcontent>
+        <template v-for='item in items'>
+            <div class='detailSection' :class='[]'>
+                <div class='row1'>
+                    <span style="float: left;">{{item.product_name}}</span>
+                    <span style="color:#CCB89E;float: right;"><img src="../img/member.png"/> {{item.used_by}}</span>
+
+                    <div style="clear: both;"></div>
+                </div>
+                <div class='row2'>
+                    <div style="font-size: 1.3rem;margin-bottom: 1rem;">{{item.last_order_process.status}}</div>
+                    <div>
+                        <span style="float:left;">负责管家：{{item.last_order_process.created_by}}</span>
+                        <span style="color:#999;float:right;">{{item.last_order_process.ctime|toDate}}</span>
+
+                        <div style="clear: both;"></div>
+
+                    </div>
+                </div>
+                <div class='row3'>
+                    <span>
+                        <img src="../img/orderContact.png"/>联系管家
+                    </span>
+                    <span v-bind='{"data-id":item.id}' v-on:click='toOrderProcess($event)'>
+                        <img src="../img/orderCheck.png"/> 查看全部
+                    </span>
+
+                    <div style="clear: both;"></div>
+                </div>
+
+            </div>
+        </template>
+    </div>
+</div>
+
+<script src='../node_modules/vue/dist/vue.min.js'></script>
+<script src='../node_modules/jquery/dist/jquery.min.js'></script>
+<script src='../components/demo.js'></script>
+<script src='../js/controller/controller.js'></script>
+<script src='../js/tool/fastclick.js'></script>
+<script src='../js/tool/response.js'></script>
+
+<script>
+    $(function () {
+        FastClick.attach(document.body);
+
+        var vm = new Vue({
+            el: '#detailScroll',
+            data: {
+                ifNeedAjax: true,
+                isAjaxing: false,
+                items: [],
+            },
+            methods: {
+                //页面跳转...
+                toOrderProcess: function (e) {
+                    var id = (e.currentTarget.getAttribute('data-id'));
+                    console.log(id);
+                    location.href = 'orderDetail.html?id=' + id;//orderDetailId
+                },
+                //滚动代码
+                scroll: function (e) {
+                    e.preventDefault();
+
+                    if (!this.ifNeedAjax) {
+                        return;
+                    }
+
+                    if (this.isAjaxing) {
+                        return;
+                    }
+
+                    var containerH = this.$els.scrollcontainer.offsetHeight;
+                    var contentH = this.$els.scrollcontent.offsetHeight;
+                    var scrollH = this.$els.scrollcontainer.scrollTop;
+
+                    if (scrollH >= (contentH - containerH )) { //动态高-容器高
+                        this.getList();
+                    }
+                },
+
+                //一个动作action....
+                getList: function () {
+                    var that = this;
+                    that.isAjaxing = true;
+                    controller.direct({
+                        php: '../json/orderDetail.json',
+                        params: {},
+                        jsonpCallback: 'jsonpCallback',
+                    }, function (json) {
+                        console.log(JSON.stringify(json, null, '\t'));
+//                        console.log(json.data);
+                        that.isAjaxing = false;
+                        [].forEach.call(json.data, function (e, i, arr) {
+                            that.items.push(e);
+                        });
+                    })
+                }
+            },
+            filters: {
+                toDate: function (val) {
+                    return new Date(val).toLocaleDateString();
+                }
+            },
+        });
+        vm.getList();
+        window.vm = vm;
+    })
+</script>
+</body>
+</html>

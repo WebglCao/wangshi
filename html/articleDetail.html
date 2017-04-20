@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no"/>
+    <title>资讯详情</title>
+    <link rel="stylesheet" href="../css/main.css"/>
+    <style>
+
+    </style>
+</head>
+<body>
+
+<div id="demo">
+    <img v-bind="{src:imgUrl}" width="100%"/>
+
+    <div style="box-sizing: border-box;padding: 1rem;">
+        <div style="font-size: 1.3rem;font-weight: bold;margin-bottom: 1rem">{{title}}</div>
+        <div style="text-align: justify">{{content}}</div>
+    </div>
+</div>
+
+<script src='../node_modules/vue/dist/vue.min.js'></script>
+<script src='../node_modules/jquery/dist/jquery.min.js'></script>
+<script src='../js/controller/controller.js'></script>
+<script src='../js/tool/fastclick.js'></script>
+<script src='../js/tool/response.js'></script>
+<script>
+    $(function () {
+        FastClick.attach(document.body);
+
+        var vm = new Vue({
+            el: '#demo',
+            data: {
+                imgUrl: '../img/firstArticle.jpg',
+                title: '政策签证1',
+                content: '政策签证1政策签证1政策签证1政策签证1政策签证1政策签证1政策签证1政策签证1政策签证1政策签证1政策签证1政策签证1政策签证1政策签证1政策签证1政策签证1政策签证1政策签证1政策签证1政策签证1政策签证1政策签证1政策签证1政策签证1政策签证1政策签证1政策签证1政策签证1政策签证1政策签证1政策签证1政策签证1政策签证1政策签证1政策签证1政策签证1'
+            },
+
+
+            created: function () {
+                var that = this;
+
+                //拉取文章列表...
+                controller.direct(
+                        {
+                            php: 'index.php?r=article/api-get-aid-to-article',
+                            params: {aid: 11}
+                        }
+                        ,
+                        function (json) {
+                            console.log(JSON.stringify(json, null, '\t'));
+                        },
+                        function (json) {
+                            console.log(JSON.stringify(json, null, '\t'));
+                        }
+                );
+            },
+        });
+
+
+    })
+</script>
+</body>
+</html>

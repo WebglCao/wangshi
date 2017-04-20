@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no"/>
+    <title>资讯列表</title>
+    <link rel="stylesheet" href="../css/main.css"/>
+    <style>
+
+        /* 头部tab */
+        #header {
+            position: fixed;
+            width: 100%;
+            background: white;
+            z-index: 2;
+            overflow-y: scroll;
+            white-space: nowrap;
+        }
+
+        #header .item {
+            width: 25%;
+            display: inline-block;
+            text-align: center;
+            height: 5rem;
+            line-height: 5rem;
+            position: relative;
+        }
+
+        .itemCur {
+            color: #CCB89E;
+        }
+
+        .itemCur::after {
+            content: "";
+            position: absolute;
+            bottom: 0rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4rem;
+            height: 2px;
+            border-radius: 4px;
+            background: #CCB89E;
+        }
+
+        /* 文章瀑布流 */
+        .articleSectionFirst {
+            /*border: 1px solid #000;*/
+            margin: 1rem;
+            box-sizing: border-box;
+            border-radius: 0.5rem;
+            position: relative;
+        }
+
+        .articleSectionFirst img {
+            display: block;
+            border-radius: 0.5rem;
+        }
+
+        .articleSection {
+            margin: 1rem;
+            box-sizing: border-box;
+            background: #F3F2F0;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            min-height: 20rem;
+        }
+
+        .articleSection .title {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+
+        }
+
+        .articleSection .subTitle {
+            color: #999;
+        }
+
+        .articleScroll {
+            box-sizing: border-box;
+            padding-top: 5rem;
+            height: 100%;
+            overflow: scroll;
+        }
+
+
+    </style>
+</head>
+<body>
+<div id="header">
+    <template v-for='item in items'>
+        <span class='item' @click='click($index)' v-bind:class="[(index==$index)?'itemCur':'']">{{item}}</span>
+    </template>
+</div>
+
+<div id='scroll' class='articleScroll'>
+    <div class='articleContent'>
+        <!--articleSection-->
+        <template v-for='item in items'>
+            <!-- 第一个的样式-->
+            <div class='articleSectionFirst' v-if='$index==0'>
+                <img v-bind="{src:item.img}" width="100%"/>
+
+                <div style="box-sizing:border-box;padding: 1rem;color:white;position: absolute; bottom:5rem">
+                    {{item.title}}
+                </div>
+                <div style="box-sizing:border-box;padding: 1rem;color:white;position: absolute; bottom: 1rem">
+                    {{item.subTitle}}
+                </div>
+            </div>
+            <!-- 除了第一个的样式-->
+            <div class='articleSection ' v-if='$index!=0'>
+                <div class='title'>{{item.title}}</div>
+                <div class='subTitle'>{{item.subTitle}}</div>
+            </div>
+        </template>
+    </div>
+</div>
+
+<script src='../node_modules/vue/dist/vue.min.js'></script>
+<script src='../node_modules/jquery/dist/jquery.min.js'></script>
+<script src='../js/controller/controller.js'></script>
+<script src='../js/tool/fastclick.js'></script>
+<script src='../js/tool/response.js'></script>
+<script>
+    $(function () {
+        FastClick.attach(document.body);
+
+        var vm = new Vue({
+            el: '#header',
+            data: {
+                items: [],
+                index: 0,
+            },
+            methods: {
+                click: function (i) {
+                    var that = this;
+                    this.index = i;
+                }
+            },
+            created: function () {
+                var that = this;
+
+                //拉取文章列表...
+                controller.direct(
+                        {
+                            php: 'index.php?r=article/api-get-channel',
+                            params: {}
+                        }
+                        ,
+                        function (json) {
+                            console.log(JSON.stringify(json, null, '\t'));
+                            that.items = ['政策签证1', '政策签证2', '政策签证3', '政策签证4','政策签证5',];
+                        }
+                );
+            },
+
+        });
+
+        var vm = new Vue({
+            el: '#scroll',
+            data: {
+                items: [
+                    {
+                        img: '../img/firstArticle.jpg',
+                        title: '政策签证1',
+                        subTitle: '政策签证政策签证政策签证政策签证政策签证政策签证政策签证'
+                    },
+                    {
+                        img: '../img/firstArticle.jpg',
+                        title: '政策签证2',
+                        subTitle: '政策签证政策签证政策签证政策签证政策签证政策签证政策签证'
+                    },
+                    {
+                        img: '../img/firstArticle.jpg',
+                        title: '政策签证3',
+                        subTitle: '政策签证政策签证政策签证政策签证政策签证政策签证政策签证'
+                    }
+                ]
+            },
+            methods: {},
+            created: function () {
+                var that = this;
+
+                //拉取文章列表...
+                controller.direct(
+                        {
+                            php: 'index.php?r=article/api-get-cid-to-article',
+                            params: {
+                                cid:1,
+                                page_size:10,
+                                page_num:1,
+                            }
+                        }
+                        ,
+                        function (json) {
+                            console.log(JSON.stringify(json, null, '\t'));
+                        }
+                );
+            },
+
+        });
+
+
+    })
+</script>
+</body>
+</html>

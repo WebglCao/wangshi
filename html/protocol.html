@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no"/>
+    <title>旺仕使用条款</title>
+    <link rel="stylesheet" href="../css/main.css"/>
+    <style>
+        #btnsContainer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .btn {
+            height: 4rem;
+            line-height: 4rem;
+            border-bottom: 1px solid #999999;
+            box-sizing: border-box;
+            text-align: center;
+            background: #333333;
+            color: white;
+            font-size: 1.3rem;
+        }
+    </style>
+</head>
+<body>
+<div id='txtContainer' style="text-align: center;margin: 2rem 0">
+    <div style="font-size: 1.3rem;">旺仕使用条款</div>
+    <div style="font-size: 3rem;margin: 1rem 0 2rem">使用条款</div>
+    <div style="font-size: 1.3rem;">请仔细阅读使用条款</div>
+</div>
+<div id='btnsContainer'>
+    <div class='btn'>旺仕官网使用条款</div>
+    <div class='btn'>旺仕俱乐部使用条款</div>
+    <div class='btn'>旺礼卡章程</div>
+    <div class='btn'>旺仕手机应用条款</div>
+</div>
+
+<script src='../node_modules/vue/dist/vue.min.js'></script>
+<script src='../node_modules/jquery/dist/jquery.min.js'></script>
+<script src='../js/controller/controller.js'></script>
+<script src='../js/tool/fastclick.js'></script>
+<script src='../js/tool/response.js'></script>
+<script>
+    $(function () {
+        FastClick.attach(document.body);
+
+    })
+</script>
+</body>
+</html>

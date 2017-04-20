@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../css/mainPC.css"/>
+    <link rel="stylesheet" href="../css/boot.css"/>
+    <title>新建订单</title>
+    <style>
+        .col-l {
+            width: 70%;
+            float: left;
+            box-sizing: border-box;
+            padding: 10px 0;
+            border: 10px solid #eee;
+        }
+
+        .col-r {
+            width: 30%;
+            float: right;
+            box-sizing: border-box;
+            /*padding: 10px 0;*/
+            border: 10px solid #eee;
+        }
+
+        /*searchUser CSS*/
+        #searchUser {
+            border-bottom: 10px solid #eee;
+            padding: 10px;
+        }
+
+        #searchUser .form-control {
+            margin-right: 10px;
+        }
+
+        #ajaxResults {
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid #ccc;
+        }
+
+        .ajaxResultSection {
+            /*border: 1px solid #000;*/
+            box-sizing: border-box;
+            padding: 6px 12px;
+            cursor: pointer;
+            /*transition: all 0.5s ease;*/
+        }
+
+        .ajaxResultSection:hover {
+            background: dodgerblue;
+            color: white;
+        }
+
+        #finalResult {
+            margin-top: 20px;
+        }
+
+        .finalResultRow {
+            margin-bottom: 10px;
+        }
+
+        #finalResult .key {
+            width: 100px;
+            display: inline-block;
+        }
+
+        #finalResult .value {
+            background: #eeeeee;
+            display: inline-block;
+            width: 500px;
+        }
+
+        /*searchProduct*/
+        #searchProduct {
+            /*border-bottom: 10px solid #eee;*/
+            box-sizing: border-box;
+            padding: 10px;
+        }
+
+        #mainSearch select {
+            margin-right: 10px;
+        }
+
+        #mainSearch input {
+            margin-right: 10px;
+        }
+
+        #products .product {
+            border: 1px solid #eee;
+            width: 300px;
+            float: left;
+            margin: 10px 10px 0 0;
+            box-sizing: border-box;
+            padding: 10px;
+        }
+
+        #products .product .img {
+            float: left;
+            width: 33.3%;
+            height: 33.3%;
+            box-sizing: border-box;
+            padding: 5px;
+
+        }
+
+        #products .product .text {
+            float: right;
+            margin-left: 5%;
+            width: 61.6%;
+            box-sizing: border-box;
+            padding: 5px;
+            color: #555;
+        }
+
+        /*mask*/
+        #mask {
+            position: absolute;
+            top: 0%;
+            left: 0%;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        #maskCenter {
+            border-radius: 4px;
+            opacity: 1;
+            background: white;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 700px;
+            -webkit-transform: translateX(-50%) translateY(-50%);
+            -moz-transform: translateX(-50%) translateY(-50%);
+            -ms-transform: translateX(-50%) translateY(-50%);
+            -o-transform: translateX(-50%) translateY(-50%);
+            transform: translateX(-50%) translateY(-50%);
+            box-sizing: border-box;
+        }
+
+        #maskCenterTitle {
+            border-bottom: 1px solid #eee;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        #maskCenterCenter {
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        #maskCenterBottom {
+            border-top: 1px solid #eee;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        #maskCenterCenter .singleProduct {
+            margin: 0px 0 15px;
+        }
+
+        #maskCenterCenter .singleProductName {
+            margin-bottom: 5px;
+        }
+
+        #maskCenterCenter .involvement {
+            margin-right: 10px;
+        }
+
+        /*右侧 orderResult 订单结果*/
+        #orderResult {
+            box-sizing: border-box;
+            /*padding: 10px ;*/
+        }
+
+        #orderResult .firLine {
+            box-sizing: border-box;
+            padding: 10px;
+            border-bottom: 10px solid #eee;
+
+        }
+
+        #orderResult .orderResults {
+            box-sizing: border-box;
+            padding: 10px;
+            border-bottom: 10px solid #eee;
+        }
+
+        #orderResult .orderResult {
+            margin-bottom: 10px;
+        }
+
+        #orderResult .bottomLine {
+            box-sizing: border-box;
+            padding: 10px;
+            /*border-bottom: 10px solid #eee;*/
+        }
+
+        #orderResult .totalProductNumber {
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            color: #CCB89E;
+            border: 1px solid #CCB89E;
+        }
+
+        #orderResult .totalPrice {
+            line-height: 30px;
+            color: red;
+            font-size: 18px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="col-l">
+    <div id='searchUser'>
+        <input type="text" class='form-control' v-model='searchStr'/>
+        <span class="btn btn-primary" @click='search'>查找</span>
+
+        <div id="ajaxResults" v-show='ifAjaxResults'>
+            <template v-for='ajaxResult in ajaxResults'>
+                <div class="ajaxResultSection" @click='chooseOne($event)' data-id="{{ajaxResult.id}}"
+                     data-index="{{$index}}">
+                    <span>姓名：{{ajaxResult.userName}}</span>&nbsp&nbsp<span>手机号：{{ajaxResult.mobile}}</span>
+                </div>
+            </template>
+        </div>
+        <div id='finalResult' v-show='ifFinalResult'>
+            <div class="finalResultRow">
+                <span class='key'>用户名</span>
+                <input class='form-control value' type="text"
+                       v-model='finalResult.userName' disabled='disabled'/>
+            </div>
+            <div class="finalResultRow">
+                <span class='key'>联系手机号</span>
+                <input class='form-control value' type="text" v-model='finalResult.mobile' disabled='disabled'/>
+            </div>
+            <div class="finalResultRow">
+                <span class='key'>会员等级</span>
+                <input class='form-control value' type="text" v-model='finalResult.level' disabled='disabled'/>
+            </div>
+            <div class="finalResultRow">
+                <span class='key'>家庭组员</span>
+                <input class='form-control value' type="text" v-model='finalResult.famliyGroup' disabled='disabled'/>
+            </div>
+            <div class="finalResultRow">
+                <span class='key'>可使用权益</span>
+                <input class='form-control value' type="text" v-model='finalResult.right' disabled='disabled'/>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="searchProduct">
+        <!-- 搜索框 -->
+        <div id='mainSearch'>
+            <select @change='change' class="form-select" v-model='productTypeValue'>
+                <option v-for='type in productTypes' value='{{type}}'>
+                    {{type}}
+                </option>
+            </select>
+            <input type="text" class='form-control' v-model='searchStr'/>
+            <span class="btn btn-primary" @click='search'>搜索</span>
+        </div>
+
+        <!-- 搜索以后显示的产品 -->
+        <div id='products'>
+            <template v-for='product in products'>
+                <div class='product'>
+                    <img v-bind='{src:product.img}' class='img'>
+                    <span class='text'>
+                        <div> {{product.productName}}</div>
+                        <div style="margin: 10px 0">
+                            <span>{{product.productPrice|currency '￥' 0}}&nbsp&nbsp</span>
+                            <span>{{product.productDiscount}}折</span>
+                        </div>
+                        <div class='btn btn-primary' @click='showMask'>加入订单</div>
+                    </span>
+
+                </div>
+            </template>
+        </div>
+    </div>
+</div>
+
+<div class="col-r">
+    <div id='orderResult'>
+        <!-- 首行是产品订单和清空订单 -->
+        <div class='firLine'>
+            <span style="float: left;">产品订单</span>
+            <span style="float: right;" class="fakeA" @click='clear'>清空订单</span>
+
+            <div style="clear: both;"></div>
+        </div>
+
+        <!-- 首行是产品订单和清空订单 -->
+        <div class='orderResults' v-show='ifResultsShow'>
+            <template v-for='orderResult in orderResults' track-by='$index'>
+                <div class='orderResult'>
+                    <div>
+                        <span style="float: left;">{{orderResult.productName}}</span>
+                        <span style="float: right;">{{orderResult.usedBy}}</span>
+
+                        <div style="clear: both;"></div>
+                    </div>
+
+                    <div>
+                        <span style="float: left;">{{orderResult.price|currency '￥' 0}}</span>
+                        <span style="float: right;">
+
+                            <span class="fakeA" @click='check($index)'>查看</span>
+                            <span class="fakeA" @click='delete($index)'>删除</span>
+                        </span>
+
+                        <div style="clear: both;"></div>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+
+        <div class='bottomLine'>
+            <span style="float: left;" class='totalProductNumber'>{{totalProductNumber}}</span>
+            <span style="float: left;" class='totalPrice'>{{totalPrice|currency '￥' 2}}</span>
+            <span style="float: right;" class='btn btn-primary' @click='createOrder'>生成订单</span>
+
+            <div style="clear: both"></div>
+        </div>
+    </div>
+</div>
+
+<div id='mask' v-show='show'>
+    <div id='maskCenter'>
+        <!-- title有产品名和关闭-->
+        <div id='maskCenterTitle'>
+            <span style="float: left;">{{productDetail.productName}}</span>
+            <span style="float: right;cursor: pointer" @click='close'>X</span>
+
+            <div style="clear: both"></div>
+        </div>
+        <div id='maskCenterCenter'>
+
+            <!-- 遍历每一个产品-->
+            <template v-for='singleProduct in productDetail.products'>
+                <div class='singleProduct'>
+
+                    <!-- 产品名是必须的 -->
+                    <div class='singleProductName'>{{singleProduct.productName}}</div>
+
+                    <!-- 有 involvementNumber 属性说明是个n选m -->
+                    <div v-if='singleProduct.involvementNumber' class='involvementContainer'
+                         data-involvementLimit={{singleProduct.involvementLimit}}>
+
+                        <template v-for='involvement in singleProduct.involvementArray'>
+                            <!-- 7选5 的点击span -->
+                            <span class='btn btn-default involvement'
+                                  @click='btnClick($event)'> {{involvement}}</span>
+                        </template>
+
+                        <template v-if='ifRadioShow'>
+                            <!-- 第一个被选中-->
+                            <input type="radio"
+                                   class='involvementRadio'
+                                   name='involvementRadio'
+                                   checked='{{$index==0}}'
+                                   @change='radioChange($event)'
+                                    />选择
+                        </template>
+
+                    </div>
+                </div>
+
+            </template>
+
+
+        </div>
+
+
+        <div id='maskCenterBottom'>
+            <span style="float: left;">
+                <span style="margin-right: 10px;">受益人</span>
+                <select v-el:usedbyselect class="form-select" v-model='usedBy'>
+                    <option v-for='usedBy in usedByArray' value='{{usedBy}}' track-by='$index'>
+                        {{usedBy}}
+                    </option>
+                </select>
+            </span>
+
+            <span style="float: right;">
+                <span style="margin-right: 10px;color: red">{{productDetail.totalPrice|currency '￥' 0}}</span>
+                <span class='btn btn-primary' @click='submit'>确认选择</span>
+            </span>
+
+            <div style="clear: both"></div>
+        </div>
+    </div>
+</div>
+
+<script src='../node_modules/vue/dist/vue.min.js'></script>
+<script src='../node_modules/jquery/dist/jquery.min.js'></script>
+<script src='../js/controller/controller.js'></script>
+<script src='../js/app/app.js'></script>
+
+</body>
+</html>
